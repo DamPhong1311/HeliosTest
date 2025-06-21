@@ -16,41 +16,70 @@ public class FilterByCategoryTest {
 
         try {
             driver.get("https://helios.vn");
+
             try {
                 WebElement iconMenu = wait.until(ExpectedConditions.elementToBeClickable(
                         By.cssSelector("span.icon-menu")));
                 iconMenu.click();
                 System.out.println("Đã mở menu bằng icon-menu (màn hình nhỏ)");
-                Thread.sleep(1000); // chờ menu hiện
+                Thread.sleep(1000);
             } catch (Exception e) {
                 System.out.println("Không cần mở icon-menu (màn hình đủ lớn)");
             }
 
-            // B1: Click nut MENU
+            // B1: Vào danh mục "NHẪN BẠC NAM"
             WebElement menuBtn = wait.until(ExpectedConditions.elementToBeClickable(
                     By.cssSelector("li.has-children > a[aria-haspopup='true']")));
             menuBtn.click();
 
-            // B2: Cho danh sach hien ra va click vao "Nhan bac nam"
             WebElement categoryLink = wait.until(ExpectedConditions.elementToBeClickable(
                     By.linkText("NHẪN BẠC NAM")));
             categoryLink.click();
 
-            // B3: Cho trang danh muc load va kiem tra ket qua
+            // B2: Chờ danh mục load
+            wait.until(ExpectedConditions.visibilityOfElementLocated(
+                    By.cssSelector("div.product-list")));
+            System.out.println("Loc theo danh muc san pham thanh cong ");
+            // B3: Lọc theo Giá
+            WebElement giaFilter = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//summary[contains(text(), 'Giá')]")));
+            giaFilter.click();
+            System.out.println("Đã mở bộ lọc Giá");
+
+            // Chọn giá < 1.000.000 VND (thường là radio/checkbox đầu tiên)
+            WebElement giaCheckbox = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//span[text()='500.000 - 999.000 VND']")));
+            giaCheckbox.click();
+            System.out.println("Đã loc theo gia thanh cong");
+
+            Thread.sleep(3000); // đợi trang reload
+
+            // B4: Lọc theo Size
+            WebElement sizeFilter = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//summary[contains(text(), 'Size')]")));
+            sizeFilter.click();
+            System.out.println("Đã mở bộ lọc Size");
+
+            WebElement sizeCheckbox = wait.until(ExpectedConditions.elementToBeClickable(
+                    By.xpath("//span[text()='Size 6']")));
+            sizeCheckbox.click();
+            System.out.println("Đã loc theo size thanh cong");
+
+            Thread.sleep(3000); // đợi lọc xong
+
+            // B5: Kiểm tra kết quả
             WebElement productList = wait.until(ExpectedConditions.visibilityOfElementLocated(
                     By.cssSelector("div.product-list")));
-
-            String countText = productList.getAttribute("data-result-count");
-            int count = Integer.parseInt(countText.trim());
+            int count = driver.findElements(By.cssSelector("div.product-block")).size();
 
             if (count > 0) {
-                System.out.println("Loc thanh cong - Co " + count + " san pham hien thi");
+                System.out.println(" Lọc theo Giá và Size thành công - Có " + count + " sản phẩm");
             } else {
-                System.out.println(" Loc that bai - Khong co san pham");
+                System.out.println(" Lọc thất bại - Không có sản phẩm");
             }
 
         } catch (Exception e) {
-            System.out.println("Xay ra loi: " + e.getMessage());
+            System.out.println(" Xảy ra lỗi: " + e.getMessage());
             e.printStackTrace();
         } finally {
             driver.quit();

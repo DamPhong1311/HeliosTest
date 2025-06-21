@@ -1,8 +1,8 @@
+com\helios\test\FilterByCategoryTest.class
 com\helios\test\Manual\LoginTest.class
-ProductDetailTest.class
-FilterByCategoryTest.class
 com\helios\test\Manual\LogOutTest.class
-SearchTest.class
-AddToCartTest.class
 com\helios\test\Manual\SignUpTest.class
+com\helios\test\SearchTest.class
 com\helios\test\App.class
+com\helios\test\ProductDetailTest.class
+com\helios\test\AddToCartTest.class
